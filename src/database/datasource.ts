@@ -1,6 +1,11 @@
 import { DataSource } from 'typeorm';
 import * as dotenv from 'dotenv';
 import { Aeroline } from 'src/aerolines/entities/aeroline.entity';
+import { Client } from 'src/clients/entities/client.entity';
+import { Hotel } from 'src/hotels/entities/hotel.entity';
+import { Place } from 'src/places/entities/place.entity';
+import { Reservation } from 'src/reservations/entities/reservation.entity';
+import { Tour } from 'src/tours/entities/tour.entity';
 
 dotenv.config();
 
@@ -11,7 +16,7 @@ export const AppDataSource = new DataSource({
   username: process.env.DB_USERNAME || 'locutermo',
   password: process.env.DB_PASSWORD || 'smokdasfdd123',
   database: process.env.DB_DATABASE || 'rutamundial',
-  entities: [Aeroline],
+  entities: [Aeroline,Client,Hotel,Place,Reservation,Tour],
   synchronize: true,
 });
 
