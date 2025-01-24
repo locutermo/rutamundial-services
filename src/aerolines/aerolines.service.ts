@@ -1,7 +1,6 @@
-// src/aerolines/aerolines.service.ts
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository } from 'typeorm';;
 import { CreateAerolineDto } from './dto/create-aeroline.dto';
 import { UpdateAerolineDto } from './dto/update-aeroline.dto';
 import { Aeroline } from './entities/aeroline.entity';
@@ -10,28 +9,34 @@ import { Aeroline } from './entities/aeroline.entity';
 export class AerolinesService {
   constructor(
     @InjectRepository(Aeroline)
-    private readonly aerolineRepo: Repository<Aeroline>,
+    private readonly aerolinesRepository: Repository<Aeroline>,
   ) {}
 
   async create(createAerolineDto: CreateAerolineDto): Promise<Aeroline> {
-    const aeroline = this.aerolineRepo.create(createAerolineDto);
-    return this.aerolineRepo.save(aeroline);
+    const aeroline = this.aerolinesRepository.create(createAerolineDto);
+    return this.aerolinesRepository.save(aeroline);
   }
 
-  findAll(): Promise<Aeroline[]> {
-    return this.aerolineRepo.find();
+  async findAll(): Promise<Aeroline[]> {
+    return this.aerolinesRepository.find();
   }
 
-  findOne(id: number): Promise<Aeroline|null> {
-    return this.aerolineRepo.findOne({ where: { id } });
+  async findOne(id: number): Promise<Aeroline> {
+    const aeroline = await this.aerolinesRepository.findOne({ where: { id } });
+    if (!aeroline) {
+      throw new NotFoundException(`Aeroline with ID ${id} not found`);
+    }
+    return aeroline;
   }
 
-  async update(id: number, updateAerolineDto: UpdateAerolineDto): Promise<Aeroline|null> {
-    await this.aerolineRepo.update({ id }, updateAerolineDto);
-    return this.aerolineRepo.findOne({ where: { id } });
+  async update(id: number, updateAerolineDto: UpdateAerolineDto): Promise<Aeroline> {
+    const aeroline = await this.findOne(id);
+    Object.assign(aeroline, updateAerolineDto);
+    return this.aerolinesRepository.save(aeroline);
   }
 
   async remove(id: number): Promise<void> {
-    await this.aerolineRepo.delete(id);
+    await this.findOne(id);
+    await this.aerolinesRepository.delete(id);
   }
 }

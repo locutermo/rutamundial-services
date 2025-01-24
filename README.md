@@ -71,6 +71,32 @@ $ mau deploy
 
 With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
 
+## Database
+
+We can use postgresql database but you can use any other of your preference.
+
+To start PostgreSQL on macOS, you can use the brew command if you installed PostgreSQL via Homebrew. Here are the steps:
+
+Install PostgreSQL (if not already installed): If you haven't installed PostgreSQL yet, you can install it using Homebrew:
+
+```bash
+$ brew install postgresql
+```
+
+Start PostgreSQL: You can start the PostgreSQL service using the following command:
+
+```bash
+$ brew services start postgresql
+```
+
+## Environment Variables
+
+* DB_HOST= **************
+* DB_PORT=5432
+* DB_USERNAME= **************
+* DB_PASSWORD= **************
+* DB_DATABASE= rutamundial
+
 ## Resources
 
 Check out a few resources that may come in handy when working with NestJS:

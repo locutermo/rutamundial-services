@@ -12,7 +12,6 @@ export class AerolinesController {
     return this.aerolinesService.create(createAerolineDto);
   }
 
-  @HttpCode(205)
   @Get()
   findAll() {
     return this.aerolinesService.findAll();
