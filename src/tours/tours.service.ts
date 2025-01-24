@@ -1,26 +1,42 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Tour } from './entities/tour.entity';
 import { CreateTourDto } from './dto/create-tour.dto';
 import { UpdateTourDto } from './dto/update-tour.dto';
 
 @Injectable()
 export class ToursService {
-  create(createTourDto: CreateTourDto) {
-    return 'This action adds a new tour';
+  constructor(
+    @InjectRepository(Tour)
+    private readonly tourRepository: Repository<Tour>,
+  ) {}
+
+  async create(createTourDto: CreateTourDto): Promise<Tour> {
+    const tour = this.tourRepository.create(createTourDto);
+    return this.tourRepository.save(tour);
   }
 
-  findAll() {
-    return `This action returns all tours`;
+  findAll(): Promise<Tour[]> {
+    return this.tourRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} tour`;
+  async findOne(id: number): Promise<Tour> {
+    const tour = await this.tourRepository.findOne({ where: { id } });
+    if (!tour) {
+      throw new NotFoundException(`Tour with id ${id} not found`);
+    }
+    return tour;
   }
 
-  update(id: number, updateTourDto: UpdateTourDto) {
-    return `This action updates a #${id} tour`;
+  async update(id: number, updateTourDto: UpdateTourDto): Promise<Tour> {
+    const tour = await this.findOne(id);
+    Object.assign(tour, updateTourDto);
+    return this.tourRepository.save(tour);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} tour`;
+  async remove(id: number): Promise<void> {
+    await this.findOne(id);
+    await this.tourRepository.delete(id);
   }
 }
