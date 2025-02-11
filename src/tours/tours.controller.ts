@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { ToursService } from './tours.service';
 import { CreateTourDto } from './dto/create-tour.dto';
@@ -21,13 +22,19 @@ export class ToursController {
   }
 
   @Get()
-  findAll() {
-    return this.toursService.findAll();
+  async findAll(@Query('withOffers') withOffers: string) {
+    const loadOffers = withOffers === 'true';
+    return await this.toursService.findAll(loadOffers);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.toursService.findOne(+id);
+  }
+
+  @Get(':id/operators')
+  async getOperators(@Param('id') id: string) {
+    return await this.toursService.getOperators(Number(id));
   }
 
   @Patch(':id')
