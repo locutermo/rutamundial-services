@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { PlacesService } from './places.service';
 import { CreatePlaceDto } from './dto/create-place.dto';
@@ -20,9 +21,20 @@ export class PlacesController {
     return this.placesService.create(createPlaceDto);
   }
 
+  @Post(':placeId/hotels/:hotelId')
+  async assignHotel(
+    @Param('placeId') placeId: string,
+    @Param('hotelId') hotelId: string,
+  ) {
+    return await this.placesService.assignHotelToPlace(Number(placeId), Number(hotelId));
+  }
+
   @Get()
-  findAll() {
-    return this.placesService.findAll();
+  async findAll(@Query('withHotels') withHotels: string) {
+    if (withHotels === 'true') {
+      return await this.placesService.findAllWithHotels();
+    }
+    return await this.placesService.findAll();
   }
 
   @Get(':id')
