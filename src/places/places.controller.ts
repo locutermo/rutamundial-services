@@ -26,15 +26,31 @@ export class PlacesController {
     @Param('placeId') placeId: string,
     @Param('hotelId') hotelId: string,
   ) {
-    return await this.placesService.assignHotelToPlace(Number(placeId), Number(hotelId));
+    return await this.placesService.assignHotelToPlace(
+      Number(placeId),
+      Number(hotelId),
+    );
+  }
+
+  @Post(':placeId/tours/:tourId')
+  async assignTour(
+    @Param('placeId') placeId: string,
+    @Param('tourId') tourId: string,
+  ) {
+    return await this.placesService.assignTourToPlace(
+      Number(placeId),
+      Number(tourId),
+    );
   }
 
   @Get()
-  async findAll(@Query('withHotels') withHotels: string) {
-    if (withHotels === 'true') {
-      return await this.placesService.findAllWithHotels();
-    }
-    return await this.placesService.findAll();
+  async findAll(
+    @Query('withHotels') withHotels: string,
+    @Query('withTours') withTours: string,
+  ) {
+    const loadHotels = withHotels === 'true';
+    const loadTours = withTours === 'true';
+    return await this.placesService.findAll(loadHotels, loadTours);
   }
 
   @Get(':id')

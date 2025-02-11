@@ -6,6 +6,7 @@ import {
   Column,
   CreateDateColumn,
   ManyToMany,
+  OneToMany,
 } from 'typeorm';
 
 @Entity({ name: 'places' })
@@ -26,7 +27,7 @@ export class Place {
     onUpdate: 'CURRENT_TIMESTAMP',
   })
   public updated_at: Date;
-  
+
   @Column({ type: 'varchar', length: 255 })
   name: string;
 
@@ -35,4 +36,7 @@ export class Place {
 
   @ManyToMany(() => Hotel, (hotel) => hotel.places)
   hotels: Hotel[];
+
+  @OneToMany(() => Tour, (tour) => tour.place)
+  tours: Tour[];
 }

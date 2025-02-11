@@ -1,10 +1,12 @@
 import { Offer } from 'src/offers/entities/offer.entity';
+import { Place } from 'src/places/entities/place.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
   OneToMany,
+  ManyToOne,
 } from 'typeorm';
 
 @Entity({ name: 'tour' })
@@ -32,4 +34,7 @@ export class Tour {
   //Relación: Un Tour puede tener muchas ofertas
   @OneToMany(() => Offer, (offer) => offer.tour)
   offers: Offer[];
+
+  @ManyToOne( () => Place, (place) => place.tours)
+  place: Place;
 }
